@@ -51,22 +51,22 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-SPIDER_MIDDLEWARES = {
-	'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-	# 'scrapysplashtest.middlewares.ScrapysplashtestSpiderMiddleware': 543,
-}
+# SPIDER_MIDDLEWARES = {
+# 	'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+# 	# 'scrapysplashtest.middlewares.ScrapysplashtestSpiderMiddleware': 543,
+# }
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-	'scrapy_splash.SplashCookiesMiddleware': 723,
-	'scrapy_splash.SplashMiddleware': 725,
-	'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-	# 'scrapysplashtest.middlewares.ScrapysplashtestDownloaderMiddleware': 543,
-}
+# # Enable or disable downloader middlewares
+# # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
+# DOWNLOADER_MIDDLEWARES = {
+# 	'scrapy_splash.SplashCookiesMiddleware': 723,
+# 	'scrapy_splash.SplashMiddleware': 725,
+# 	'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+# 	# 'scrapysplashtest.middlewares.ScrapysplashtestDownloaderMiddleware': 543,
+# }
 
-DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+# DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+# HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html

@@ -14,11 +14,12 @@ BOT_NAME = 'instagram_user'
 SPIDER_MODULES = ['instagram_user.spiders']
 NEWSPIDER_MODULE = 'instagram_user.spiders'
 
-# Enter one of them
-USERID = '[Enter instagram userid]'
-USERNAME = '[Enter instagram username]'
+# Enter one or both of them
+USERID = ['userid1', 'userid2', ..., 'useridN']
+USERNAME = ['username1', 'username2', ..., 'usernameN']
 
 SPLASH_URL = 'http://localhost:8050'
+PROXY_URL = 'http://localhost:5555/random'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'instagram_user (+http://www.yourdomain.com)'
@@ -58,12 +59,14 @@ ROBOTSTXT_OBEY = False
 
 # # Enable or disable downloader middlewares
 # # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-# 	'scrapy_splash.SplashCookiesMiddleware': 723,
-# 	'scrapy_splash.SplashMiddleware': 725,
-# 	'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-# 	# 'scrapysplashtest.middlewares.ScrapysplashtestDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+	'instagram_user.middlewares.ProxyMiddleware': 350,
+	# 'scrapy_splash.SplashCookiesMiddleware': 723,
+	# 'scrapy_splash.SplashMiddleware': 725,
+	# 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+	# 'scrapysplashtest.middlewares.ScrapysplashtestDownloaderMiddleware': 543,
+	# 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': None,
+}
 
 # DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 # HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'

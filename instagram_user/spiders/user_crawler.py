@@ -32,24 +32,29 @@ class UserCrawlerSpider(scrapy.Spider):
 	allowed_domains = ['www.instagram.com']
 	base_url = 'https://www.instagram.com/graphql/query/?'
 
-	if settings.USERID is '':
-		find_id_url = 'https://www.instagram.com/' + settings.USERNAME
+	def get_userid(self, name):
+		find_id_url = 'https://www.instagram.com/' + name
 		response = requests.get(find_id_url, headers=headers)
 		result = re.search('"profilePage_(.*?)"', response.text)
-		settings.USERID = result[1]
+		return result[1]
 
-	param = {
-		'query_hash': 'e769aa130647d2354c40ea6a439bfc08',
-		'variables': '{"id":"'+ settings.USERID +'","first":12}',
-	}
+	def get_params(self, id, next_page=''):
+		param = {
+			'query_hash': 'e769aa130647d2354c40ea6a439bfc08',
+			'variables': '{"id":"'+ str(id) +'","first":12, "after":"'+ next_page +'"}',
+		}
+		return param
 
 	def start_requests(self):
-		url = self.base_url + urlencode(self.param)
-
-		yield Request(url, headers=headers, callback=self.parse)
+		for userid in settings.USERID:
+			url = self.base_url + urlencode(self.get_params(userid))
+			yield Request(url, headers=headers, callback=self.parse)
+		for name in settings.USERNAME:
+			userid = self.get_userid(name)
+			url = self.base_url + urlencode(self.get_params(userid))
+			yield Request(url, headers=headers, callback=self.parse)
 
 	def parse(self, response):
-		print(response.text)
 		data_json = json.loads(response.text)
 		data = data_json.get('data').get('user').get('edge_owner_to_timeline_media')
 
@@ -58,9 +63,8 @@ class UserCrawlerSpider(scrapy.Spider):
 			item = InstagramUserItem()
 			item['postid'] = user_node.get('id')
 			item['username'] = user_node.get('owner').get('username')
-			if settings.USERNAME is '':
-				settings.USERNAME = user_node.get('owner').get('username')
-			item['userid'] = user_node.get('owner').get('id')
+			userid = user_node.get('owner').get('id')
+			item['userid'] = userid
 			item['liked'] = user_node.get('edge_media_preview_like').get('count')
 			try:
 				item['caption'] = user_node.get('edge_media_to_caption').get('edges')[0].get('node').get('text')
@@ -92,8 +96,9 @@ class UserCrawlerSpider(scrapy.Spider):
 		# get next page and send request
 		page_info = data.get('page_info')
 		if page_info.get('has_next_page'):
-			temp_variables = json.loads(self.param.get('variables'))
-			temp_variables['after'] = page_info.get('end_cursor')
-			self.param['variables'] = json.dumps(temp_variables)
-			url = self.base_url + urlencode(self.param)
+			# temp_variables = json.loads(self.param.get('variables'))
+			# temp_variables['after'] = page_info.get('end_cursor')
+			# self.param['variables'] = json.dumps(temp_variables)
+			next_page = page_info.get('end_cursor')
+			url = self.base_url + urlencode(self.get_params(userid, next_page))
 			yield Request(url, headers=headers, callback=self.parse)

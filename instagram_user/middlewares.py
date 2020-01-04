@@ -27,9 +27,9 @@ class ProxyMiddleware():
 		# if request.meta.get('retry_times'):
 		proxy = self.get_random_proxy()
 		if proxy:
-			uri = 'http://{proxy}'.format(proxy=proxy)
+			url = 'http://{proxy}'.format(proxy=proxy)
 			self.logger.debug('Using VPN '+ proxy)
-			request.meta['proxy'] = uri
+			request.meta['proxy'] = url
 
 	@classmethod
 	def from_crawler(cls, crawler):
